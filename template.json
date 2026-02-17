@@ -14,12 +14,12 @@
             "defaultValue": "WEB1-ip",
             "type": "String"
         },
-        "virtualNetworks_VNET_LAB1_name": {
-            "defaultValue": "VNET-LAB1",
+        "virtualNetworks_VNET_LAB2_name": {
+            "defaultValue": "VNET-LAB2",
             "type": "String"
         },
-        "networkInterfaces_web1189_z2_name": {
-            "defaultValue": "web1189_z2",
+        "networkInterfaces_WEB1_name": {
+            "defaultValue": "WEB1-NIC",
             "type": "String"
         },
         "networkSecurityGroups_NSG_WEB_name": {
@@ -151,7 +151,6 @@
                 "2"
             ],
             "properties": {
-                "ipAddress": "48.211.219.18",
                 "publicIPAddressVersion": "IPv4",
                 "publicIPAllocationMethod": "Static",
                 "idleTimeoutInMinutes": 4,
@@ -164,7 +163,7 @@
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2024-07-01",
-            "name": "[parameters('virtualNetworks_VNET_LAB1_name')]",
+            "name": "[parameters('virtualNetworks_VNET_LAB2_name')]",
             "location": "eastus2",
             "properties": {
                 "addressSpace": {
@@ -180,7 +179,7 @@
                 "subnets": [
                     {
                         "name": "SUBNET-WEB",
-                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_VNET_LAB1_name'), 'SUBNET-WEB')]",
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_VNET_LAB2_name'), 'SUBNET-WEB')]",
                         "properties": {
                             "addressPrefixes": [
                                 "10.0.1.0/24"
@@ -202,7 +201,7 @@
             "name": "[parameters('virtualMachines_WEB1_name')]",
             "location": "eastus2",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_web1189_z2_name'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_WEB1_name'))]"
             ],
             "zones": [
                 "2"
@@ -223,12 +222,11 @@
                     },
                     "osDisk": {
                         "osType": "Linux",
-                        "name": "[concat(parameters('virtualMachines_WEB1_name'), '_OsDisk_1_f1f65f03c0c84e14baf225267ceb61f2')]",
+                        "name": "[concat(parameters('virtualMachines_WEB1_name'), '-OS1')]",
                         "createOption": "FromImage",
                         "caching": "ReadWrite",
                         "managedDisk": {
-                            "storageAccountType": "Premium_LRS",
-                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_WEB1_name'), '_OsDisk_1_f1f65f03c0c84e14baf225267ceb61f2'))]"
+                            "storageAccountType": "Premium_LRS"
                         },
                         "deleteOption": "Delete",
                         "diskSizeGB": 30
@@ -237,12 +235,11 @@
                         {
                             "lun": 0,
                             "name": "[concat(parameters('virtualMachines_WEB1_name'), '-DATA1')]",
-                            "createOption": "Attach",
+                            "createOption": "Empty",
                             "caching": "ReadWrite",
                             "writeAcceleratorEnabled": false,
                             "managedDisk": {
-                                "storageAccountType": "StandardSSD_LRS",
-                                "id": "[resourceId('Microsoft.Compute/disks', 'web1-data1')]"
+                                "storageAccountType": "StandardSSD_LRS"
                             },
                             "deleteOption": "Detach",
                             "diskSizeGB": 16,
@@ -274,8 +271,7 @@
                         }
                     },
                     "secrets": [],
-                    "allowExtensionOperations": true,
-                    "requireGuestProvisionSignal": true
+                    "allowExtensionOperations": true
                 },
                 "securityProfile": {
                     "uefiSettings": {
@@ -287,7 +283,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_web1189_z2_name'))]",
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_WEB1_name'))]",
                             "properties": {
                                 "deleteOption": "Detach"
                             }
@@ -392,9 +388,9 @@
         {
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2024-07-01",
-            "name": "[concat(parameters('virtualNetworks_VNET_LAB1_name'), '/SUBNET-WEB')]",
+            "name": "[concat(parameters('virtualNetworks_VNET_LAB2_name'), '/SUBNET-WEB')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_VNET_LAB1_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_VNET_LAB2_name'))]"
             ],
             "properties": {
                 "addressPrefixes": [
@@ -408,11 +404,11 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2024-07-01",
-            "name": "[parameters('networkInterfaces_web1189_z2_name')]",
+            "name": "[parameters('networkInterfaces_WEB1_name')]",
             "location": "eastus2",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_WEB1_ip_name'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_VNET_LAB1_name'), 'SUBNET-WEB')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_VNET_LAB2_name'), 'SUBNET-WEB')]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_WEB1_nsg_name'))]"
             ],
             "kind": "Regular",
@@ -420,7 +416,7 @@
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
-                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_web1189_z2_name')), '/ipConfigurations/ipconfig1')]",
+                        "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_WEB1_name')), '/ipConfigurations/ipconfig1')]",
                         "type": "Microsoft.Network/networkInterfaces/ipConfigurations",
                         "properties": {
                             "privateIPAddress": "10.0.1.4",
@@ -432,7 +428,7 @@
                                 }
                             },
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_VNET_LAB1_name'), 'SUBNET-WEB')]"
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_VNET_LAB2_name'), 'SUBNET-WEB')]"
                             },
                             "primary": true,
                             "privateIPAddressVersion": "IPv4"
