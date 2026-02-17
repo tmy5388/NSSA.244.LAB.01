@@ -22,10 +22,6 @@
             "defaultValue": "WEB1-NIC",
             "type": "String"
         },
-        "networkSecurityGroups_NSG_WEB_name": {
-            "defaultValue": "NSG-WEB",
-            "type": "String"
-        },
         "networkSecurityGroups_WEB1_nsg_name": {
             "defaultValue": "WEB1-nsg",
             "type": "String"
@@ -40,54 +36,6 @@
             "location": "eastus2",
             "properties": {
                 "publicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDCnrO7Mr7JXXgRDxnJrt5QCBLrbm7p4XIDXHelyAp1mm+kJgJV7ozXK7CVAht6wGBzwHFVpIoe13RhiLqdjQA4nfxKNKdPwDN7+GAkdnFxfH8jMUJYSvpVuuEeGx73w/R5krdgtdLJDmWkHctz336HF/RQAsDZ8S/758KLGJwBJ2futdrDau6JZ0dSOp0kt7vw+j43jU9i2tA98kmC2Zt32tOWexQ9eOIcmRHAcgtzhMsYy+EVb+FaDFrAaLFvJt2T147I+r5L+IVh6G0QQbASSD101E38UBw3GY5oCA2fX65Q8q1JcdG9OKFKF3t5evfQRrLJjl4IUd81NVMJPQ07MEn6I30n4BoSGuIAL/vx1tSHH57MU7eYyud2E1Uqt7s6GaW3MoL1XGW3Mv3Qffr+6+VdadMC9XBSjX6DVrNueYhUahlMEgi03DOVsKpPmoWZxHehYLJFMZ+SJCX6xFA8o+3FXzI+vnuy2Dw327jOvFf2a4W7yX3udpSbufSGB40= generated-by-azure"
-            }
-        },
-        {
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2024-07-01",
-            "name": "[parameters('networkSecurityGroups_NSG_WEB_name')]",
-            "location": "eastus2",
-            "properties": {
-                "securityRules": [
-                    {
-                        "name": "ALLOW-SSH",
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_NSG_WEB_name'), 'ALLOW-SSH')]",
-                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-                        "properties": {
-                            "protocol": "TCP",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "22",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Allow",
-                            "priority": 100,
-                            "direction": "Inbound",
-                            "sourcePortRanges": [],
-                            "destinationPortRanges": [],
-                            "sourceAddressPrefixes": [],
-                            "destinationAddressPrefixes": []
-                        }
-                    },
-                    {
-                        "name": "ALLOW-HTTP",
-                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_NSG_WEB_name'), 'ALLOW-HTTP')]",
-                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-                        "properties": {
-                            "protocol": "TCP",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "80",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Allow",
-                            "priority": 101,
-                            "direction": "Inbound",
-                            "sourcePortRanges": [],
-                            "destinationPortRanges": [],
-                            "sourceAddressPrefixes": [],
-                            "destinationAddressPrefixes": []
-                        }
-                    }
-                ]
             }
         },
         {
